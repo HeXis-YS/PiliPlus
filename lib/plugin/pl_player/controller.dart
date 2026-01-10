@@ -819,6 +819,31 @@ class PlPlayerController {
           );
         }
       }
+      // Apply custom mpv extra options
+      final extraOptions = Pref.mpvExtraOptions;
+      if (extraOptions.isNotEmpty) {
+        final lines = extraOptions.split('\n');
+        for (final line in lines) {
+          final trimmedLine = line.trim();
+          if (trimmedLine.isEmpty || !trimmedLine.contains('=')) {
+            continue;
+          }
+          final parts = trimmedLine.split('=');
+          if (parts.length < 2) {
+            continue;
+          }
+          final key = parts[0].trim();
+          final value = parts.sublist(1).join('=').trim();
+          if (key.isEmpty || value.isEmpty) {
+            continue;
+          }
+          try {
+            await pp.setProperty(key, value);
+          } catch (e) {
+            debugPrint('Failed to set mpv property $key=$value: $e');
+          }
+        }
+      }
     }
 
     // 音轨

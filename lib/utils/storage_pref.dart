@@ -942,4 +942,10 @@ abstract final class Pref {
 
   static bool get showDynDispute =>
       _setting.get(SettingBoxKey.showDynDispute, defaultValue: false);
+
+  static String get mpvExtraOptions =>
+      _setting.get(SettingBoxKey.mpvExtraOptions, defaultValue: '');
+
+  static Future<void> setMpvExtraOptions(String val) =>
+      _setting.put(SettingBoxKey.mpvExtraOptions, val.trim());
 }
