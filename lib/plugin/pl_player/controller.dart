@@ -896,7 +896,7 @@ class PlPlayerController {
           AudioNormalization.getParamFromConfig(Pref.fallbackNormalization),
         );
       }
-      filters = audioNormalization.isEmpty
+      filters = audioNormalization.isEmpty || audioUri.isEmpty
           ? null
           : {'lavfi-complex': '"[aid1] $audioNormalization [ao]"'};
     } else {
