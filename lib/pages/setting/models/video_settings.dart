@@ -391,4 +391,51 @@ List<SettingsModel> get videoSettings => [
       }
     },
   ),
+  NormalModel(
+    title: '自定义 mpv 参数',
+    leading: const Icon(Icons.settings_outlined),
+    getSubtitle: () {
+      final options = Pref.mpvExtraOptions;
+      return options.isEmpty ? '未设置' : '已配置自定义参数';
+    },
+    onTap: (context, setState) async {
+      String currentOptions = Pref.mpvExtraOptions;
+      String? result = await showDialog<String>(
+        context: context,
+        builder: (context) {
+          final controller = TextEditingController(text: currentOptions);
+          return AlertDialog(
+            title: const Text('自定义 mpv 参数'),
+            content: TextField(
+              controller: controller,
+              maxLines: 8,
+              decoration: const InputDecoration(
+                hintText: '每行一个参数，格式：key=value\n例如：cache=yes',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Get.back(),
+                child: Text(
+                  '取消',
+                  style: TextStyle(
+                    color: ColorScheme.of(context).outline,
+                  ),
+                ),
+              ),
+              TextButton(
+                onPressed: () => Get.back(result: controller.text),
+                child: const Text('保存'),
+              ),
+            ],
+          );
+        },
+      );
+      if (result != null) {
+        await Pref.setMpvExtraOptions(result);
+        setState();
+      }
+    },
+  ),
 ];
