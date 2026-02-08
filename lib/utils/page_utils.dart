@@ -130,11 +130,11 @@ abstract final class PageUtils {
         builder: (_, setState) {
           void onTap(int choice) {
             if (choice == -1) {
+              String duration = '';
               showDialog(
                 context: context,
                 builder: (context) {
-                  final ThemeData theme = Theme.of(context);
-                  String duration = '';
+                  final theme = Theme.of(context);
                   return AlertDialog(
                     title: const Text('自定义时长'),
                     content: TextField(
@@ -154,12 +154,16 @@ abstract final class PageUtils {
                       ),
                       TextButton(
                         onPressed: () {
-                          Get.back();
-                          int choice = int.tryParse(duration) ?? 0;
-                          shutdownTimerService
-                            ..scheduledExitInMinutes = choice
-                            ..startShutdownTimer();
-                          setState(() {});
+                          try {
+                            final choice = int.parse(duration);
+                            Get.back();
+                            shutdownTimerService
+                              ..scheduledExitInMinutes = choice
+                              ..startShutdownTimer();
+                            setState(() {});
+                          } catch (e) {
+                            SmartDialog.showToast(e.toString());
+                          }
                         },
                         child: const Text('确定'),
                       ),
@@ -575,17 +579,15 @@ abstract final class PageUtils {
       vsync: state,
       duration: Duration.zero,
       reverseDuration: Duration.zero,
-    )..forward();
+    );
     state.showBottomSheet(
       constraints: const BoxConstraints(),
-      (context) {
-        return InteractiveviewerGallery(
-          sources: imgList,
-          initIndex: index,
-          quality: GlobalData().imgQuality,
-          onClose: animController.dispose,
-        );
-      },
+      (context) => InteractiveviewerGallery(
+        sources: imgList,
+        initIndex: index,
+        quality: GlobalData().imgQuality,
+        onClose: animController.dispose,
+      ),
       enableDrag: false,
       elevation: 0.0,
       backgroundColor: Colors.transparent,

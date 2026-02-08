@@ -252,6 +252,11 @@ abstract final class Pref {
   static String get videoSync =>
       _setting.get(SettingBoxKey.videoSync, defaultValue: 'display-resample');
 
+  static String get autosync => _setting.get(
+    SettingBoxKey.autosync,
+    defaultValue: Platform.isAndroid ? '30' : '0',
+  );
+
   static CDNService get defaultCDNService {
     if (_setting.get(SettingBoxKey.CDNService) case final String cdnName) {
       return CDNService.values.byName(cdnName);
@@ -456,7 +461,7 @@ abstract final class Pref {
     SuperResolutionType? superResolutionType;
     final index = _setting.get(SettingBoxKey.superResolutionType);
     if (index != null) {
-      superResolutionType = SuperResolutionType.values.getOrNull(index);
+      superResolutionType = SuperResolutionType.values.elementAtOrNull(index);
     }
     return superResolutionType ?? SuperResolutionType.disable;
   }
