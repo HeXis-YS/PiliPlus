@@ -356,7 +356,7 @@ class DownloadService extends GetxService {
       if (file != null) {
         await file.copy(filePath);
       } else {
-        await Request.dio.download(entry.cover, filePath);
+        await Request.http11Dio.download(entry.cover, filePath);
       }
       return true;
     } catch (_) {
